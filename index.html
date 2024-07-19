@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/utility.css">
+</head>
+
+<body>
+    <header>
+        <h1>Path Finder</h1>
+    </header>
+
+    <div class="container">
+        <div id="board"></div>
+        <div class="controls">
+            <h2>Controls <i class='bx bx-cog'></i></h2>
+            <select class="form-select" aria-label="Default select example" id="algorithm">
+                <option selected value="1">BFS</option>
+                <option value="2">DFS</option>
+                <option value="3">Dijkstra</option>
+                <!-- <option value="4">A*</option> -->
+            </select>
+            <button class="bn632-hover bn26" id="submit">Start</button>
+            <button class="bn632-hover bn26" id="clear">Clear</button>
+            <p class="distance-p">Distance from source to target is: <span id="distance">0</span></p>
+            <p class="distance-p">Number of node visited: <span id="visited-node">0</span></p>
+
+            <div class="guide">
+                <h2>Guide <i class='bx bx-book'></i></h2>
+                <li class="guide-li">
+                    <div class="icon source"></div>
+                    <div class="text">Start Node</div>
+                </li>
+                <li class="guide-li">
+                    <div class="icon target"></div>
+                    <div class="text">Target Node</div>
+                </li>
+                <li class="guide-li">
+                    <div class="icon wall"></div>
+                    <div class="text">Wall Node</div>
+                </li>
+                <li class="guide-li">
+                    <div class="icon unvisited"></div>
+                    <div class="text">Unvisited Node</div>
+                </li>
+                <li class="guide-li">
+                    <div class="icon visited"></div>
+                    <div class="text">Visited Node</div>
+                </li>
+                <li class="guide-li">
+                    <div class="icon path"></div>
+                    <div class="text">Shortest Path</div>
+                </li>
+
+            </div>
+
+        </div>
+    </div>
+    <script src="scripts/app.js"></script>
+</body>
+
+</html>

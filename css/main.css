@@ -1,0 +1,129 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+:root {
+    --clr-navy: #34495e;
+    --primary-clr: #6563ff;
+    --secondary-clr: #c4c3fc;
+    --light-line: #e4e2ed;
+    --cell-width: 22px;
+    --light-text: #686673;
+    --light-dot: #adaac0;
+}
+
+h1 {
+    color: var(--primary-clr);
+    margin: 10px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    width: 80%;
+    /* border: 2px solid black; */
+    margin: auto;
+    margin-top: 30px;
+    /* padding: 10px; */
+}
+
+#board {
+    aspect-ratio: 1;
+    width: 50%;
+    /* height: 600px; */
+    border: 0.5px solid black;
+    overflow: hidden;
+}
+
+.controls {
+    width: 30%;
+    /* height: 600px; */
+    /* border: 2px solid red; */
+    text-align: center;
+}
+
+/* board styleing */
+
+.col {
+    aspect-ratio: 1;
+    width: 100%;
+    min-width: var(--cell-width);
+    border: 1px solid var(--light-line);
+}
+
+.row {
+    display: flex;
+}
+
+.bn632-hover {
+    width: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    margin: 5px 0;
+    height: 40px;
+    text-align: center;
+    border: none;
+    background-size: 300% 100%;
+    border-radius: 50px;
+    /* moz-transition: all .4s ease-in-out; */
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
+.bn632-hover:hover {
+    background-position: 100% 0;
+    /* moz-transition: all .4s ease-in-out; */
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
+.bn632-hover:focus {
+    outline: none;
+}
+
+.bn632-hover.bn26 {
+    background-image: linear-gradient(to right,
+            #25aae1,
+            #4481eb,
+            #04befe,
+            #3f86ed);
+    box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
+}
+
+#algorithm {
+    width: 70%;
+    margin: 10px;
+    padding: 12px 15px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.distance-p {
+    margin-top: 13px;
+    font-size: 20px;
+}
+
+.bx {
+    font-size: 21px;
+}
+
+.guide {
+    margin-top: 50px;
+}
+
+.guide-li {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+.text {
+    margin-left: 10px;
+}
