@@ -117,8 +117,8 @@ function set(className, x = -1, y = -1) {
         matrix[x][y].classList.add(className);
     }
     else {
-        x = Math.floor(Math.random() * 5);
-        y = Math.floor(Math.random() * 5);
+        x = Math.floor(Math.random() * row);
+        y = Math.floor(Math.random() * col);
         matrix[x][y].classList.add(className);
     }
     if (x === y) {
@@ -129,65 +129,78 @@ function set(className, x = -1, y = -1) {
 }
 let source = set('source');
 let target = set('target');
-// let source = { x: 0, y: 0 };
-// let target = { x: 0, y: 1 };
-let isDrawing = false;
-let isDragging = false;
-let dragPoint = null;
-
-const handlePointerDown = (e) => {
-    e.preventDefault();
-    if (e.target.classList.contains('source')) {
-        dragPoint = 'source';
-        isDragging = true;
-    } else if (e.target.classList.contains('target')) {
-        dragPoint = 'target';
-        isDragging = true;
-    } else {
-        isDrawing = true;
-    }
-}
-
-const handlePointerMove = (e) => {
-    e.preventDefault();
-    if (isDrawing) {
-        e.target.classList.add('wall');
-    } else if (dragPoint && isDragging) {
-        cells.forEach(cell => {
-            cell.classList.remove(`${dragPoint}`);
-        });
-        e.target.classList.add(`${dragPoint}`);
-        const coordinates = e.target.id.split('-');
-        if (dragPoint === 'source') {
-            source.x = +coordinates[0];
-            source.y = +coordinates[1];
-        } else {
-            target.x = +coordinates[0];
-            target.y = +coordinates[1];
+let draging = false;
+let drawing = false;
+let dragStart = null;
+cells.forEach((cell) => {
+    const pointDown = (e) => {
+        if (e.target.classList.contains('source')) {
+            dragStart = 'source';
+            draging = true;
+        }
+        else if (e.target.classList.contains('target')) {
+            dragStart = 'target';
+            draging = true;
+        }
+        else {
+            drawing = true;
         }
     }
-}
 
-const handlePointerUp = (e) => {
-    e.preventDefault();
-    isDragging = false;
-    isDrawing = false;
-    dragPoint = null;
-}
+    const pointUp = () => {
+        drawing = false;
+        draging = false;
+        dragStart = null;
+        matrix[source.x][source.y].classList.remove('wall');
+        matrix[target.x][target.y].classList.remove('wall');
+    }
 
-const attachListeners = (cell) => {
-    cell.addEventListener('pointerdown', handlePointerDown);
-    cell.addEventListener('pointermove', handlePointerMove);
-    cell.addEventListener('pointerup', handlePointerUp);
-    cell.addEventListener('touchstart', handlePointerDown);
-    cell.addEventListener('touchmove', handlePointerMove);
-    cell.addEventListener('touchend', handlePointerUp);
+    const pointMove = (e) => {
+        const triggerElement = document.elementFromPoint(e.clientX, e.clientY);
+        if (triggerElement == null || !triggerElement.classList.contains('col')) return;
+        cordinate = { ...triggerElement.id.split('-') };
+
+        if (draging && dragStart) {
+
+            cells.forEach(cell => {
+                cell.classList.remove(dragStart);
+            })
+            triggerElement.classList.add(dragStart);
+
+            if (dragStart === 'source') {
+                source.x = Number(cordinate[0]);
+                source.y = Number(cordinate[1]);
+            }
+            else {
+                target.x = Number(cordinate[0]);
+                target.y = Number(cordinate[1]);
+            }
+        }
+
+
+        else if (drawing) {
+            if (triggerElement.classList.contains('source') || triggerElement.classList.contains('target'))
+                return;
+
+            const x = Number(cordinate[0]);
+            const y = Number(cordinate[1]);
+
+            matrix[x][y].setAttribute('class', 'col wall');
+        }
+    }
+
+    cell.addEventListener('pointerdown', pointDown);
+    cell.addEventListener('pointermove', pointMove);
+    cell.addEventListener('pointerup', pointUp);
+
     cell.addEventListener('click', () => {
-        cell.classList.toggle('wall');
-    });
-};
-cells.forEach(attachListeners);
+        if (cell.classList.contains('source') || cell.classList.contains('target'))
+            return;
 
+        cell.classList.remove('visited', 'path');
+        cell.classList.toggle('wall');
+    })
+})
 
 
 // bfs
