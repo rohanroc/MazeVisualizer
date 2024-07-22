@@ -4,16 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Maze Visualizer</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/utility.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicons/apple-touch-icon.png">
 </head>
 
 <body>
     <header>
-        <h1>Path Finder</h1>
+        <h1>Maze Visualizer</h1>
     </header>
 
     <div class="container">
@@ -57,13 +60,17 @@
                     <div class="icon path"></div>
                     <div class="text">Shortest Path</div>
                 </li>
+                <li class="guide-li">
+                    <div class="text"><i class='bx bx-info-circle'></i>
+                        Click and hold on an empty cell, move the mouse over the cells where you want to draw walls, and
+                        release the mouse button to stop drawing.</div>
+                </li>
 
             </div>
 
         </div>
     </div>
     <script src="scripts/app.js"></script>
-    <script src="scripts/example.js"></script>
 </body>
 
 </html>

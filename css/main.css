@@ -127,3 +127,35 @@ h1 {
 .text {
     margin-left: 10px;
 }
+
+@media only screen and (max-width: 1000px) {
+    .container {
+        flex-direction: column;
+        width: 100%;
+        /* margin: auto; */
+    }
+
+    #board {
+        width: 95%;
+        margin: auto;
+    }
+
+    .controls {
+        width: 100%;
+        /* margin: auto; */
+        margin-top: 20px;
+    }
+
+    #algorithm {
+        /* display: block; */
+        width: 90%;
+        text-align: center;
+    }
+}
+
+@media (min-width: 1001px) and (max-width: 1299px) {
+    #board {
+        aspect-ratio: 0;
+        height: 415px;
+    }
+}

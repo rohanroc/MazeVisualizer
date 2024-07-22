@@ -129,58 +129,64 @@ function set(className, x = -1, y = -1) {
 }
 let source = set('source');
 let target = set('target');
+// let source = { x: 0, y: 0 };
+// let target = { x: 0, y: 1 };
 let isDrawing = false;
 let isDragging = false;
 let dragPoint = null;
-cells.forEach((cell) => {
 
-    const pointerdown = (e) => {
-        if (e.target.classList.contains('source')) {
-            dragPoint = 'source';
-            isDragging = true;
-        }
-        else if (e.target.classList.contains('target')) {
-            dragPoint = 'target';
-            isDragging = true;
-        }
-        else {
-            isDrawing = true;
+const handlePointerDown = (e) => {
+    e.preventDefault();
+    if (e.target.classList.contains('source')) {
+        dragPoint = 'source';
+        isDragging = true;
+    } else if (e.target.classList.contains('target')) {
+        dragPoint = 'target';
+        isDragging = true;
+    } else {
+        isDrawing = true;
+    }
+}
+
+const handlePointerMove = (e) => {
+    e.preventDefault();
+    if (isDrawing) {
+        e.target.classList.add('wall');
+    } else if (dragPoint && isDragging) {
+        cells.forEach(cell => {
+            cell.classList.remove(`${dragPoint}`);
+        });
+        e.target.classList.add(`${dragPoint}`);
+        const coordinates = e.target.id.split('-');
+        if (dragPoint === 'source') {
+            source.x = +coordinates[0];
+            source.y = +coordinates[1];
+        } else {
+            target.x = +coordinates[0];
+            target.y = +coordinates[1];
         }
     }
-    const pointermove = (e) => {
-        if (isDrawing) {
-            e.target.classList.add('wall');
-        }
-        else if (dragPoint && isDragging) {
-            cells.forEach(cell => {
-                cell.classList.remove(`${dragPoint}`);
-            })
-            e.target.classList.add(`${dragPoint}`);
-            cordinate = e.target.id.split('-');
+}
 
-            if (dragPoint === 'source') {
-                source.x = +cordinate[0];
-                source.y = +cordinate[1];
-            }
-            else {
-                target.x = +cordinate[0];
-                target.y = +cordinate[1];
-            }
-        }
-    }
-    const pointerup = () => {
-        isDragging = false;
-        isDrawing = false;
-        dragPoint = null;
-    }
+const handlePointerUp = (e) => {
+    e.preventDefault();
+    isDragging = false;
+    isDrawing = false;
+    dragPoint = null;
+}
 
-    cell.addEventListener('pointerdown', pointerdown);
-    cell.addEventListener('pointermove', pointermove);
-    cell.addEventListener('pointerup', pointerup);
+const attachListeners = (cell) => {
+    cell.addEventListener('pointerdown', handlePointerDown);
+    cell.addEventListener('pointermove', handlePointerMove);
+    cell.addEventListener('pointerup', handlePointerUp);
+    cell.addEventListener('touchstart', handlePointerDown);
+    cell.addEventListener('touchmove', handlePointerMove);
+    cell.addEventListener('touchend', handlePointerUp);
     cell.addEventListener('click', () => {
         cell.classList.toggle('wall');
-    })
-})
+    });
+};
+cells.forEach(attachListeners);
 
 
 
