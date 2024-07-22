@@ -1,20 +1,20 @@
 const board = document.getElementById("board");
-var cells;
+var cells = [];
 var matrix = [];
 let row;
 let col;
 renderBoard();
 
 
-function renderBoard(cellWidth = 10) {
+function renderBoard(cellWidth = 22) {
     row = Math.floor(board.clientHeight / cellWidth);
     col = Math.floor(board.clientHeight / cellWidth);
     cells = [];
     for (let i = 0; i < row; i++) {
         const rowArr = [];
         const rowElement = document.createElement('div');
-        rowElement.classList.add('row');
         rowElement.setAttribute('id', `${i}`);
+        rowElement.classList.add('row');
         for (let j = 0; j < col; j++) {
             const colElement = document.createElement('div');
             colElement.classList.add('col');
@@ -194,11 +194,61 @@ const algorithm = document.getElementById('algorithm');
 const visitedNode = document.getElementById("visited-node")
 // console.log(typeof (algorithm.value));
 
+// btn.addEventListener('click', () => {
+//     // clearPath();
+//     visitedCell = [];
+//     pathToAnimate = [];
+
+//     switch (algorithm.value) {
+//         // case '': bfs(); break;
+//         case '1': bfs(); break;
+//         case '2':
+//             if (dfs(source)) pathToAnimate.push(matrix[source.x][source.y])
+//             break;
+//         case '3': dijsktra(); break;
+//         default: break;
+//     }
+//     animate(visitedCell, 'visited');
+//     console.log("clicked")
+//     setTimeout(() => {
+//         visitedNode.innerHTML = visitedNodeSize;
+//     }, 5000);
+//     setTimeout(() => {
+//         distance.innerHTML = cnt;
+//     }, 5000);
+// });
+
 btn.addEventListener('click', () => {
     if (algorithm.value === "1") {
         visitedCell = [];
         pathToAnimate = [];
         bfs();
+        animate(visitedCell, 'visited');
+        console.log("clicked")
+        setTimeout(() => {
+            visitedNode.innerHTML = visitedNodeSize;
+        }, 5000);
+        setTimeout(() => {
+            distance.innerHTML = cnt;
+        }, 5000);
+    }
+    if (algorithm.value === "2") {
+        visitedCell = [];
+        pathToAnimate = [];
+        dfs(source);
+        animate(visitedCell, 'visited');
+        console.log("clicked")
+        setTimeout(() => {
+            visitedNode.innerHTML = cnt3;
+        }, 5000);
+        setTimeout(() => {
+            distance.innerHTML = cnt2;
+        }, 5000);
+    }
+    if (algorithm.value === "3") {
+        visitedCell = [];
+        pathToAnimate = [];
+        dijsktra();
         animate(visitedCell, 'visited');
         console.log("clicked")
         setTimeout(() => {
@@ -261,7 +311,146 @@ function bfs() {
         visitedNodeSize = visitedCell.length;
     }
 }
+// dijsktra's algo
 
+class PriorityQueue {
+    constructor() {
+        this.elements = [];
+        this.length = 0;
+    }
+    push(data) {
+        this.elements.push(data);
+        this.length++;
+        this.upHeapify(this.length - 1);
+    }
+    pop() {
+        this.swap(0, this.length - 1);
+        const popped = this.elements.pop();
+        this.length--;
+        this.downHeapify(0);
+        return popped;
+    }
+    upHeapify(i) {
+        if (i === 0) return;
+        const parent = Math.floor((i - 1) / 2);
+        if (this.elements[i].cost < this.elements[parent].cost) {
+            this.swap(parent, i);
+            this.upHeapify(parent);
+        }
+    }
+    downHeapify(i) {
+        let minNode = i;
+        const leftChild = (2 * i) + 1;
+        const rightChild = (2 * i) + 2;
+
+        if (leftChild < this.length && this.elements[leftChild].cost < this.elements[minNode].cost) {
+            minNode = leftChild;
+        }
+        if (rightChild < this.length && this.elements[rightChild].cost < this.elements[minNode].cost) {
+            minNode = rightChild;
+        }
+        if (minNode !== i) {
+            this.swap(minNode, i);
+            this.downHeapify(minNode);
+        }
+    }
+    isEmpty() {
+        return this.length === 0;
+    }
+    swap(x, y) {
+        [this.elements[x], this.elements[y]] = [this.elements[y], this.elements[x]];
+    }
+}
+
+// const pq = new PriorityQueue();
+// pq.push({ cost: 2 });
+// pq.push({ cost: 1 });
+// pq.push({ cost: 0 });
+
+// console.log(pq.pop());
+// console.log(pq.pop());
+// console.log(pq.pop());
+
+
+function dijsktra() {
+    const pq = new PriorityQueue();
+    const parent = new Map();
+    const distance = [];
+    for (let i = 0; i < row; i++) {
+        const INF = [];
+        for (let j = 0; j < col; j++) {
+            INF.push(Infinity);
+        }
+        distance.push(INF);
+    }
+    distance[source.x][source.y] = 0;
+    pq.push({ cordinate: source, cost: 0 });
+
+
+
+    while (pq.length > 0) {
+        const { cordinate: cur, cost: distance_so_far } = pq.pop();
+        visitedCell.push(matrix[cur.x][cur.y]);
+
+        if (cur.x === target.x && cur.y === target.y) {
+            getPath(parent, target);
+            return;
+        }
+
+        const neighbours = [
+            { x: cur.x - 1, y: cur.y },
+            { x: cur.x, y: cur.y + 1 },
+            { x: cur.x + 1, y: cur.y },
+            { x: cur.x, y: cur.y - 1 }
+        ];
+
+        for (const neighbour of neighbours) {
+            const key = `${neighbour.x}-${neighbour.y}`;
+            if (isValid(neighbour.x, neighbour.y) &&
+                !matrix[neighbour.x][neighbour.y].classList.contains('wall')) {
+                const edgeWeight = 1;
+                const distanceToNeighbour = distance_so_far + edgeWeight;
+                if (distanceToNeighbour < distance[neighbour.x][neighbour.y]) {
+                    distance[neighbour.x][neighbour.y] = distanceToNeighbour;
+                    pq.push({ cordinate: neighbour, cost: distanceToNeighbour });
+                    parent.set(key, cur);
+                }
+            }
+        }
+        visitedNodeSize = visitedCell.length;
+    }
+}
+
+// dfs
+var cnt2 = 0;
+var cnt3 = 0;
+const visited = new Set();
+function dfs(cur) {
+    if (cur.x === target.x && cur.y === target.y) {
+        return true;
+    }
+    visitedCell.push(matrix[cur.x][cur.y]);
+    visited.add(`${cur.x}-${cur.y}`);
+    const neighbours = [
+        { x: cur.x - 1, y: cur.y },
+        { x: cur.x, y: cur.y + 1 },
+        { x: cur.x + 1, y: cur.y },
+        { x: cur.x, y: cur.y - 1 }
+    ];
+
+    for (const neighbour of neighbours) {
+        if (isValid(neighbour.x, neighbour.y) &&
+            !visited.has(`${neighbour.x}-${neighbour.y}`) &&
+            !matrix[neighbour.x][neighbour.y].classList.contains('wall')) {
+            cnt3++;
+            if (dfs(neighbour)) {
+                pathToAnimate.push(matrix[neighbour.x][neighbour.y]);
+                cnt2++;
+                return true;
+            }
+        }
+    }
+}
 // animation
 
 function animate(elements, className) {
@@ -291,3 +480,4 @@ function getPath(parent, target) {
     const p = parent.get(`${target.x}-${target.y}`);
     getPath(parent, p);
 }
+

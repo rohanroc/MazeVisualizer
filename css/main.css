@@ -50,7 +50,7 @@ h1 {
 .col {
     aspect-ratio: 1;
     width: 100%;
-    min-width: var(--cell-width);
+    /* min-width: var(--cell-width); */
     border: 1px solid var(--light-line);
 }
 
